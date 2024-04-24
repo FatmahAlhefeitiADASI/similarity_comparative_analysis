@@ -1,24 +1,86 @@
-# similarity_comparative_analysis
+# Comprehensive Similarity Comparative Tables
+## Description
+A comprehensive similarity comparative tables has been done for different PyTorch models and per-trained weights. The tables separated by GFLOPS ranges starting from 0 up to 15. For each model, the positive and negative similarities have been calculated separately in (%) and reported with its embedding inference time (ms), similarity inference time (ms).
 
-### Termonology
-- NN Archeticture: Neural Network Archeticture (model)
-- (a): anchor image/template
-- (s): source image (positive)
-- (n): negative image
-- (n1): rezised negative image
+Mentioning the GFLOPS which is measure the computer’s processing speed in terms of floating-point operations (involving mathematical operations with numbers that have decimal points). It is commonly used to quantify the performance of GPUs in term of how many billion floating-point operations it can perform per second). Acc1 and acc5 represents the proportion of the test samples for which the correct label is the model’s highest-confidence prediction of top-one and top-five accuracy.  
 
-### Note: 
-- (a) image size = 9.7 kB 
-- (s) image size = 10.7 kB
-- (n) image size = 236.2 kB
-- (n2) image size: 9.7 kB
+
+
+## Device used
+NVIDIA Jetson AGX Orin (utilizing GPU)
+
+
+
+## Input Data
+input data differ depends on the similarity type. 
+- For **positive similarity**, anchor and source image were used (similar). 
+- For **negative similarity**, anchor and negative image were used (dissimilar).
+
+
+
+## Transform Function
+**‘torchvision.transforms’** module within PyTorch’s torchvision library was used. It provides set of common image transformations for image preprocessing and augmentation. Including the basic operations and converting images to tensors. 
+
+**‘Compose’** class allows to compose multiple image transformations into a single transformation pipeline (sequentially) to input image.
+
+```
+transform = transforms.Compose([  
+    transforms.Resize(232), 
+    transforms.CenterCrop(224), 
+    transforms.ToTensor(), 
+    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+])
+```
+**Resize, CentreCrop, and Normalize** parameters differ based on the model (note: the above example is for ‘regnet_x_16gf’ model).
+
+
+
+
+## Similarity Algorithm
+**Cosine similarity** was used between two vectors represented by PyTorch tensors. Tensors embeddings moved from GPU to CPU and then converted to numpy arrays to perform the similarity caalculation using the following equation:
+![Cosine Equation.](/home/adasi/git-sim/cosine_eq.png). And returns the calculated cosine similarity value.
+
+```
+def cosine_similarity(emb1, emb2):
+    if emb1.is_cuda:
+        emb1 = emb1.cpu()
+    if emb2.is_cuda:
+        emb2 = emb2.cpu()
+    emb1_np = emb1.numpy()
+    emb2_np = emb2.numpy()
+    return np.dot(emb1_np, emb2_np.T) / (np.linalg.norm(emb1_np) * np.linalg.norm(emb2_np))
+```
+
+
+
+## Termonology
+- **NN Archeticture**: Neural Network Archeticture (model)
+- **(a)**: anchor image/template
+- **(s)**: source image (positive)
+- **(n)**: negative image
+- **(n1)**: rezised negative image
+- **GFLOPS)**: Giga Floating Point Operations Per Second
+  
+
+## Note
+- (a) image resolution =  (size = 9.7 kB)
+  * Width: 301 pixels  
+  * Height: 167 pixels
+- (s) image resolution = (size = 10.7 kB)
+  * Width: 259 pixels  
+  * Height: 194 pixels
+- (n) image resolution = (size = 236.2 kB)
+  * Width: 2022 pixels  
+  * Height: 1349 pixels
+- (n1) image resolution: (size = 9.7 kB)
+  * Width: 300 pixels  
+  * Height: 170 pixels
 - Negative similarity for GFLOPS ranges from 0-3 was calculated for image (n) and (n1) **separetly**.
 - Negative similarity for GFLOPS ranges from 4-8 was calculated for image (n1) **only**.
+
+<details>  
+<summary> GFLOPS Range (0)</summary>
   
-## GFLOPS Range (0)
-
-
-
 |**NN Architecture**|alexnet|efficientnet_b0|efficientnet_b1(v2)|mnasnet0_5|mnasnet0_75|mnasnet1_0|mnasnet1_3|mobilenet_v2 (v2)|mobilenet_v3_large(v2)|mobilenet_v3_small|regnet_x_400mf (v2)|
 |-|-|-|-|-|-|-|-|-|-|-|-|
 | **Positive Similarity**|-|-|-|-|-|-|-|-|-|-|-|
@@ -37,15 +99,14 @@
 | **acc1**| 56.522|77.692|79.838|67.734|71.18|73.456|76.506|72.154|75.274|67.668|74.864|
 | **acc5**|79.066|93.532|94.934|87.49|90.496|91.51|93.522|90.822|92.566|87.402|92.322|
 
+
 ### **Analysis:** 
 - **alexnet** has the smallest embedding inference time (positive similarity)
 - **efficientnet_b0** & **efficientnet_b1 (v2)** has negative values in the anchor & negative similarity (negativr similarity) of **image (n)**
 - **efficientnet_b1(v2)** has the smallest similarity inference time (negative similarity)
 - **mobilenet_v3_large(v2)** & **regnet_x_400mf (v2)** models reach +80% in anchor & positive similarity (positive similarity), while **mobilenet_v3_small** almost 80%
   
-
-
-
+</details>
 
 
 
