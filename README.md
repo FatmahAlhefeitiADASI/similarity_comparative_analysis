@@ -9,6 +9,7 @@ Mentioning the GFLOPS which is measure the computer’s processing speed in term
 
 
 
+
 ## Device used
 NVIDIA Jetson AGX Orin (utilizing GPU)
 
@@ -18,7 +19,10 @@ NVIDIA Jetson AGX Orin (utilizing GPU)
 input data differ depends on the similarity type. 
 - For **positive similarity**, anchor and source image were used (similar). 
 - For **negative similarity**, anchor and negative image were used (dissimilar).
-
+- 
+|Anchor (n) | Source (s) | Negative (n) | Negative (n1) |
+|:---:|:---:|:---:|:---:|
+| ![](/home/adasi/git-sim/a.jpg)|![](/home/adasi/git-sim/s.jpg)|![](/home/adasi/git-sim/n.jpg)|![](/home/adasi/git-sim/n1.jpg)|
 
 
 ## Transform Function
@@ -108,10 +112,12 @@ def cosine_similarity(emb1, emb2):
 | **acc5**|79.066|93.532|94.934|87.49|90.496|91.51|93.522|90.822|92.566|87.402|92.322|
 ### **Analysis:** 
 - **alexnet** has the smallest embedding inference time (positive similarity)
-- **efficientnet_b0** & **efficientnet_b1 (v2)** has negative values in the anchor & negative similarity (negativr similarity) of **image (n)**
-- **efficientnet_b1(v2)** has the smallest similarity inference time (negative similarity)
-- **mobilenet_v3_large(v2)** & **regnet_x_400mf (v2)** models reach +80% in anchor & positive similarity (positive similarity), while **mobilenet_v3_small** almost 80%
-- **regnet_x_400mf(v2)** has the smallest vector dimentionaloty = 400
+- **efficientnet_b1(v2)** has the smallest similarity inference time (n negative similarity)
+- Almost all models mentioned in this table have similarity inference time less than 2 ms.
+- **mobilenet_v3_large(v2) & regnet_x_400mf (v2)** models reach +80% in anchor & positive similarity (positive similarity), while **mobilenet_v3_small** almost 80%
+- **regnet_x_400mf(v2)** has the smallest vector dimensionality = **400**
+- **mnasnet** models have vector dimension = **62720**
+
 </details>
 
 
@@ -138,6 +144,11 @@ def cosine_similarity(emb1, emb2):
 | **acc1**|77.522|75.804|78.828|60.552|69.362|72.996|76.23|58.092|58.178|
 | **acc5**|93.826|92.742|94.502|81.746|88.316|91.086|93.006|80.42|80.624|
 ### **Analysis:** 
+- **squeezenet** models has the smallest embedding inference time (positive similarity)
+- Almost all models mentioned in this table have similarity inference time less than 2 ms.
+- **regnet_x_800mf(v2) & regnet_y_400mf(v2) &  regnet_y_800mf(v2)** models reach +80% in anchor & positive similarity (positive similarity)
+- **regnet_y_400mf(v2)** has the smallest vector dimensionality = **440**
+- **shufflenet_v2_x2_0** model has the highest vector dimension = **100352**
 
 </details>
 
@@ -164,6 +175,12 @@ def cosine_similarity(emb1, emb2):
 | **acc1**|74.434|75.6|80.608|82.008|69.778|79.668|81.196|69.758|73.314|
 | **acc5**|91.972|92.806|95.31|96.054|89.53|94.922|95.43|89.078|91.42|
 ### **Analysis:** 
+- **resnet18** model has the smallest embedding inference time (positive similarity)
+- **efficientnet_b3** has the smallest similarity inference time (n negative similarity) with **negative value**
+- Almost all models mentioned in this table have similarity inference time less than 2 ms.
+- **googlenet & regnet_x_1_6gf(v2) & regnet_x_3_2gf(V2) & resnet18 & resne34** models reach +80% in anchor & positive similarity (positive similarity)
+- **resnet18 & resne34** has the smallest vector dimensionality = **512**
+- **densenet169** model has the highest vector dimension = **81536**
 
 </details>
 
@@ -188,6 +205,12 @@ def cosine_similarity(emb1, emb2):
 | **acc1**|82.52|76.896|83.384|81.198|80.858|76.13|81.474|82.072|
 | **acc5**|96.146|93.37|96.594|95.34|95.434|92.862|95.776|96.132|
 ### **Analysis:** 
+- **convnext_tiny** model has the smallest embedding inference time (positive similarity)
+- Almost all models mentioned in this table have similarity inference time less than 2 ms.
+- **convnext_tiny & resnext50_32x4d(v2) & resnet50(v1) & resnet50(v2)**  models reach +80% in anchor & positive similarity (positive similarity)
+- **convnext_tiny & swin_t & swin_v2_t**  has the smallest vector dimensionality = **768**
+- **densenet201** model has the highest vector dimension = **94080**
+
 
 </details>
 
@@ -210,6 +233,11 @@ def cosine_similarity(emb1, emb2):
 | **acc1**|83.616|77.138|84.228|82.828|81.886|83.196|70.37|
 | **acc5**|96.65|93.56|96.878|96.33|95.78|96.36|89.81|
 ### **Analysis:** 
+- **vgg11_bn** model has the smallest embedding inference time (positive & negative similarity) while it took the highest similarity inference time
+- **efficientnet_v2_s & regnet_y_8gf(v2) & resnet101(v2)**  models reach +80% in anchor & positive similarity (positive similarity), while **convnext_small** almost 80%
+- **convnext_small & swin_s** has the smallest vector dimensionality = **768**
+- **densenet161** model has the highest vector dimension = **108192**
+
 
 </details>
 
@@ -232,6 +260,12 @@ def cosine_similarity(emb1, emb2):
 | **acc1**|71.592|83.444|81.602|83.712|80.058|
 | **acc5**|90.382|96.628|95.758|96.816|94.944|
 ### **Analysis:** 
+- **vgg16 (v1)** model has the smallest embedding inference time (positive similarity)
+- Similarity inference time (positive & negative similarities) took a longer time than the other models.
+- **wide_resnet50_2 (v2) & regnet_x_16gf**  models reach +80% in anchor & positive similarity (positive similarity)
+- **swin_v2_s**  has the smallest vector dimensionality = **768**
+- **vgg16 (v1)** model has the highest vector dimension = **25088**
+
 
 </details>
 
